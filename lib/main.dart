@@ -11,15 +11,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Shopping List',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: ShoppingList(title: 'Shopping List'),
@@ -36,7 +27,7 @@ class ShoppingList extends StatefulWidget {
 }
 
 class _ShoppingListState extends State<ShoppingList> {
-  final _items = <String>{};
+  final _items = <String>[];
   final _bought = <String>{};
 
   @override
@@ -45,32 +36,28 @@ class _ShoppingListState extends State<ShoppingList> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ListView(
-        children: <Widget>[
-          Card(
+      body: ListView.builder(
+        itemCount: _items.length,
+        itemBuilder: (context, index) {
+          return Card(
             child: ListTile(
-              title: Text('牛乳'),
-           ),
-          ),
-          Card(
-            child: ListTile(
-              title: Text('オートミール'),
+              title: Text(_items[index])
             )
-          ),
-          Card(
-            child: ListTile(
-              title: Text('卵'),
-            ),
-          )
-        ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          final newListText = await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
               return ShoppingItemAddPage();
             })
           );
+          if(newListText != null) {
+            setState(() {
+              _items.add(newListText);
+            });
+          }
         },
         child: Icon(Icons.add),
       ),
@@ -85,6 +72,7 @@ class ShoppingItemAddPage extends StatefulWidget {
 
 class _ShoppingItemAddPageState extends State<ShoppingItemAddPage> {
   String _text = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +98,7 @@ class _ShoppingItemAddPageState extends State<ShoppingItemAddPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(_text);
+                  Navigator.of(context).pop(_text);
                 },
                 child: Text('リスト追加', style: TextStyle(color: Colors.white),),
               )
