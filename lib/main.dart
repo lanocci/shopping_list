@@ -56,6 +56,18 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () async {
+              await Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) {
+                  return LoginPage();
+                }),
+              );
+            },
+          )
+        ],
       ),
       body: ListView.builder(
         itemCount: _items.length,
