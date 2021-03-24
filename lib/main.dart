@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ShoppingListApp());
 }
 
-class MyApp extends StatelessWidget {
+class ShoppingListApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -13,20 +13,41 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ShoppingList(title: 'Shopping List'),
+      home: LoginPage(),
     );
   }
 }
 
-class ShoppingList extends StatefulWidget {
-  ShoppingList({Key key, this.title}): super(key: key);
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+            child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        ElevatedButton(
+            onPressed: () async {
+              await Navigator.of(context)
+                  .pushReplacement(MaterialPageRoute(builder: (context) {
+                return ShoppingListPage(title: 'ShoppingList');
+              }));
+            },
+            child: Text('ログイン'))
+      ],
+    )));
+  }
+}
+
+class ShoppingListPage extends StatefulWidget {
+  ShoppingListPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _ShoppingListState createState() => _ShoppingListState();
+  _ShoppingListPageState createState() => _ShoppingListPageState();
 }
 
-class _ShoppingListState extends State<ShoppingList> {
+class _ShoppingListPageState extends State<ShoppingListPage> {
   final _items = <String>[];
   final _bought = <String>{};
 
@@ -39,21 +60,16 @@ class _ShoppingListState extends State<ShoppingList> {
       body: ListView.builder(
         itemCount: _items.length,
         itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(_items[index])
-            )
-          );
+          return Card(child: ListTile(title: Text(_items[index])));
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final newListText = await Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return ShoppingItemAddPage();
-            })
-          );
-          if(newListText != null) {
+          final newListText = await Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) {
+            return ShoppingItemAddPage();
+          }));
+          if (newListText != null) {
             setState(() {
               _items.add(newListText);
             });
@@ -95,14 +111,16 @@ class _ShoppingItemAddPageState extends State<ShoppingItemAddPage> {
             ),
             const SizedBox(height: 8),
             Container(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(_text);
-                },
-                child: Text('リスト追加', style: TextStyle(color: Colors.white),),
-              )
-            ),
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(_text);
+                  },
+                  child: Text(
+                    'リスト追加',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
             const SizedBox(height: 8),
             Container(
               width: double.infinity,
