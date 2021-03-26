@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
   runApp(ShoppingListApp());
@@ -18,26 +20,85 @@ class ShoppingListApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String infoText = '';
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ElevatedButton(
-            onPressed: () async {
-              await Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) {
-                return ShoppingListPage(title: 'ShoppingList');
-              }));
-            },
-            child: Text('ログイン'))
-      ],
-    )));
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(labelText: 'email address'),
+                onChanged: (String value) {
+                  setState(() {
+                    email = value;
+                  })
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'password'),
+                obscureText: true,
+                onChanged: (String value) {
+                  setState(() {
+                    password = value;
+                  });
+                },
+              ),
+              Container(
+                padding: EdgeInsets.all(8),
+                child: Text(infoText)
+              ),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  child: Text('ユーザ登録'),
+                  onPressed: () async {
+                    try {
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      )
+    )
   }
 }
+
+//class LoginPage extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//        body: Center(
+//            child: Column(
+//      mainAxisAlignment: MainAxisAlignment.center,
+//      children: <Widget>[
+//        ElevatedButton(
+//            onPressed: () async {
+//              await Navigator.of(context)
+//                  .pushReplacement(MaterialPageRoute(builder: (context) {
+//                return ShoppingListPage(title: 'ShoppingList');
+//              }));
+//            },
+//            child: Text('ログイン'))
+//      ],
+//    )));
+//  }
+//}
 
 class ShoppingListPage extends StatefulWidget {
   ShoppingListPage({Key key, this.title}) : super(key: key);
