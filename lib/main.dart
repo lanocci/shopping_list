@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(ShoppingListApp());
 }
 
@@ -67,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                         email: email, password: password);
                     await Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) {
-                        return ShoppingListPage();
+                        return ShoppingListPage(title: 'ShoppingList');
                       }),
                     );
                   } catch (e) {
@@ -84,27 +87,6 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 }
-
-//class LoginPage extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//        body: Center(
-//            child: Column(
-//      mainAxisAlignment: MainAxisAlignment.center,
-//      children: <Widget>[
-//        ElevatedButton(
-//            onPressed: () async {
-//              await Navigator.of(context)
-//                  .pushReplacement(MaterialPageRoute(builder: (context) {
-//                return ShoppingListPage(title: 'ShoppingList');
-//              }));
-//            },
-//            child: Text('ログイン'))
-//      ],
-//    )));
-//  }
-//}
 
 class ShoppingListPage extends StatefulWidget {
   ShoppingListPage({Key key, this.title}) : super(key: key);
